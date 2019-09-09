@@ -9,7 +9,7 @@ def make_model(input_shape, num_classes):
     input_image = Input(shape=input_shape)
     # ============================================= TOP BRANCH ===================================================
     # first top convolution layer
-    top_conv1 = Convolution2D(filters=48, kernel_size=(11,11), strides=(4,4), input_shape=input_shape, activation='relu')(input_image)
+    top_conv1 = Conv2D(filters=48, kernel_size=(11,11), strides=(4,4), input_shape=input_shape, activation='relu')(input_image)
     top_conv1 = BatchNormalization()(top_conv1)
     top_conv1 = MaxPooling2D(pool_size=(3,3), strides=(2,2))(top_conv1)
 
