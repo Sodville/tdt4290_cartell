@@ -17,9 +17,10 @@ def load_image(img_path, out_size=(227,227)):
     return img
 
 def get_class_string(one_hot_vector):
-    label_mapping = {0 : 'black', 1 : 'blue', 2 :'cyan', 3 :'gray', 4 :'green', 5 :'red', 6 :'white', 7 :'yellow'}
+    labels = ['black', 'blue', 'cyan', 'gray', 'green', 'red', 'white', 'yellow']
+    labels = sorted(labels)
     idx = np.argmax(one_hot_vector)
-    return label_mapping[idx]
+    return labels[idx]
 
 if __name__ == "__main__":
     args = make_arg_parser().parse_args()
@@ -28,4 +29,5 @@ if __name__ == "__main__":
     img = load_image(args.image_path)
     pred = model.predict(img)
 
+    print(pred[0])
     print("The color of the car is", get_class_string(pred))
