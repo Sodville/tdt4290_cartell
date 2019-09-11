@@ -97,7 +97,7 @@ else:
     for first_image in range(1, 8145, 64):
         print(f'Uploading images {first_image} to {first_image + 63}.')
         image_list = []
-        for image_num in range(first_image, first_image + 64):
+        for image_num in range(first_image, min(first_image + 64, 8144)):
             file_name = f'{image_num:05}.jpg'
             with open(base_image_url + file_name, 'rb') as image_contents:
                 image_list.append(
