@@ -33,7 +33,7 @@ def find_tag(tag_name, fetched_tags):
 
 ENDPOINT = 'https://northeurope.api.cognitive.microsoft.com'
 
-training_key = '<your training key'
+training_key = '74f4411506874b9893eb04b688c26c88'
 prediction_key = '<your prediction key>'
 prediction_resource_id = '<your prediction resource id>'
 
@@ -54,11 +54,11 @@ else:
 # Read data from disk
 
 print('Reading tags from disk ...')
-tag_data = loadmat('devkit/cars_meta.mat')
+tag_data = loadmat('datasets/stanford/devkit/cars_meta.mat')
 tags = map_tags_to_list(tag_data['class_names'])
 
 print('Reading training data annotations ...')
-training_data = loadmat('devkit/cars_train_annos.mat')
+training_data = loadmat('datasets/stanford/devkit/cars_train_annos.mat')
 meta_training = map_annotations_to_dict(training_data['annotations'])
 
 # Create or fetch tags
@@ -91,11 +91,11 @@ if num_untagged:
 if (num_tagged + num_tagged) == len(meta_training):
     print(f'Found {num_tagged + num_tagged} images in project and an equal number were read from disk. Skipping image upload.')
 else:
-    base_image_url = 'cars_train/'
+    base_image_url = 'datasets/stanford/cars_train/'
     print('Uploading images...')
 
     for first_image in range(1, 8145, 64):
-        print(f'Uploading images {first_image} to {first_image + 64}.')
+        print(f'Uploading images {first_image} to {first_image + 63}.')
         image_list = []
         for image_num in range(first_image, first_image + 64):
             file_name = f'{image_num:05}.jpg'
@@ -110,10 +110,18 @@ else:
 
         upload_result = trainer.create_images_from_files(project.id, images=image_list)
         if not upload_result.is_batch_successful:
-            print('Image batch upload failed.')
-            for image in upload_result.images:
-                print('Image status: ', image.status)
-            exit(-1)
+            print('Some images batch upload failed.')
+            num_dupes = 0
+            for fn, image in zip([f'{i:05}.jpg' for i in range(first_image, first_image + 64)], upload_result.images):
+                if image.status != 'OKDuplicate':
+                    print(f'Image {fn} failed with status: {image.status}')
+                else:
+                    num_dupes += 1
+            
+            print(f'{num_dupes} images were not uploaded due to being duplicates.')
+
+            # print('Critical error. Aborting image upload.')
+            # exit(-1)
 
 # print ("Training...")
 # iteration = trainer.train_project(project.id)
