@@ -32,5 +32,5 @@ def get_car_information_from_api(license_plate):
         "registreringsnummer": response["kjennemerke"],
         "merke": response["tekniskKjoretoy"]["merke"],
         "modell": response["tekniskKjoretoy"]["handelsbetegnelse"],
-        "farge": response["tekniskKjoretoy"]["karosseri"]
+        "farge": response["tekniskKjoretoy"]["karosseri"]["farge"]
     }
