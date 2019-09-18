@@ -2,10 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def get_car_information(license_plate):
-    return scrape_from_regnr(license_plate)
-
-
 def scrape_from_regnr(license_plate):
     url_params = "s1=" + license_plate[0] + "&s2=" + license_plate[1] + "&s3=" + license_plate[2] + "&s4=" \
         + license_plate[3] + "&s5="  + license_plate[4] + "&s6=" + license_plate[5] + "&s7=" + license_plate[6]
