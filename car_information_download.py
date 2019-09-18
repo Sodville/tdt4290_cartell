@@ -1,7 +1,7 @@
 from os import listdir
 from os.path import isfile, join
+from car_information_service import get_car_information_from_api, scrape_from_regnr
 import time
-import car_information_service
 import json
 
 
@@ -22,12 +22,11 @@ for license_number in license_numbers:
         print(license_number)
         has_fetched = False
         try:
-            car = car_information_service.get_car_information_from_api(
-                license_number)
+            car = get_car_information_from_api(license_number)
             has_fetched = True
         except:
             try:
-                car = car_information_service.scrape_from_regnr(license_number)
+                car = scrape_from_regnr(license_number)
                 has_fetched = True
             except:
                 print("Could not fetch information about :", license_number)
