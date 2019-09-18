@@ -13,10 +13,10 @@ def scrape_from_regnr(license_plate):
     car_information = soup.find(id="huskerikke_right").contents[3].contents[0].contents[2]
 
     return {
-        "registreringsnummer": license_plate.encode("utf-8"),
-        "merke": car_information.contents[1].string.split(' ', 1)[0].encode("utf-8"), # assume all brands are one-worded
-        "modell": car_information.contents[1].string.split(' ', 1)[1].encode("utf-8"),
-        "farge": car_information.contents[3].string.encode("utf-8")
+        "registreringsnummer": license_plate,
+        "merke": car_information.contents[1].string.split(' ', 1)[0], # assume all brands are one-worded
+        "modell": car_information.contents[1].string.split(' ', 1)[1],
+        "farge": car_information.contents[3].string
     }
 
 
@@ -25,8 +25,8 @@ def get_car_information_from_api(license_plate):
     response = requests.get(api + license_plate).json()
 
     return {
-        "registreringsnummer": response["kjennemerke"].encode("utf-8"),
-        "merke": response["tekniskKjoretoy"]["merke"].encode("utf-8"),
-        "modell": response["tekniskKjoretoy"]["handelsbetegnelse"].encode("utf-8"),
-        "farge": response["tekniskKjoretoy"]["karosseri"]["farge"].encode("utf-8")
+        "registreringsnummer": response["kjennemerke"],
+        "merke": response["tekniskKjoretoy"]["merke"],
+        "modell": response["tekniskKjoretoy"]["handelsbetegnelse"],
+        "farge": response["tekniskKjoretoy"]["karosseri"]["farge"]
     }
