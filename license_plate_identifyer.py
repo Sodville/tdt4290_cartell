@@ -14,7 +14,7 @@ OPEN_ALPR_ENDPOINT = 'https://api.openalpr.com/v2/recognize_bytes' \
     + '?recognize_vehicle=1&country=eu&secret_key=%s' % (SECRET_KEY)
 
 
-def identify_car_plate(path, image):
+def identify_license_plate(path, image):
     with open(path + image, 'rb') as file:
         img_base64 = base64.b64encode(file.read())
 
@@ -38,7 +38,7 @@ def rename_file(path, file, new_name):
 images = os.listdir(IMAGE_PATH)
 for image in images:
     try:
-        license_plate = identify_car_plate(IMAGE_PATH, image)
+        license_plate = identify_license_plate(IMAGE_PATH, image)
         filename = rename_file(IMAGE_PATH, image, license_plate)
         print("Renamed " + image + " to " + filename)
     except:
