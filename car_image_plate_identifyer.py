@@ -9,30 +9,37 @@ import os
 
 # Change the following to the correct image path:
 IMAGE_PATH = "images/"
-images = os.listdir(IMAGE_PATH)
 SECRET_KEY = 'sk_DEMODEMODEMODEMODEMODEMO'
 OPEN_ALPR_ENDPOINT = 'https://api.openalpr.com/v2/recognize_bytes' \
     + '?recognize_vehicle=1&country=eu&secret_key=%s' % (SECRET_KEY)
 
 
-for image in images:
-    with open(IMAGE_PATH + image, 'rb') as image_file:
-        img_base64 = base64.b64encode(image_file.read())
+def identify_car_plate(path, image):
+    with open(path + image, 'rb') as file:
+        img_base64 = base64.b64encode(file.read())
 
     try:
         r = requests.post(OPEN_ALPR_ENDPOINT, data=img_base64)
         result_json = r.json()
 
-        # The resulting plate number
-        plate_id = result_json["results"][0]["plate"]
-
-        # Renames the file to the plate number
-        dst = plate_id + ".jpg"
-        src = IMAGE_PATH + image
-        dst = IMAGE_PATH + dst
-        os.rename(src, dst)
-
-        # Prints the new filenameimagePath
-        print("Image renamed to:", plate_id + ".jpg")
+        return result_json["results"][0]["plate"]
     except:
-        pass
+        return None
+
+
+def rename_file(path, file, new_name):
+    file_extension = file.split(".")[1]
+    new_file = new_name + "." + file_extension
+    new_path = path + new_file
+    os.rename(path + file, new_path)
+    return new_file
+
+
+images = os.listdir(IMAGE_PATH)
+for image in images:
+    try:
+        license_plate = identify_car_plate(IMAGE_PATH, image)
+        filename = rename_file(IMAGE_PATH, image, license_plate)
+        print("Renamed " + image + " to " + filename)
+    except:
+        print("Could not find a license plate in image " + image)
