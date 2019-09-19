@@ -5,8 +5,8 @@ import time
 import json
 
 
-OUTPUT_DIRECTORY = "datasets/car_data"
-IMAGE_DIRECTORY = "datasets/car_images"
+OUTPUT_DIRECTORY = "../datasets/car_data"
+IMAGE_DIRECTORY = "../datasets/car_images"
 
 
 def get_filenames_in_directory(directory):
@@ -43,7 +43,7 @@ def fetch_data(license_numbers):
                     print("Fetch ok")
                     print(json.dumps(car))
                 else:
-                    print("Could not fetch data of: " license_number)
+                    print("Could not fetch data of: " + license_number)
                 time.sleep(1)
 
 license_numbers = get_filenames_in_directory(IMAGE_DIRECTORY)
