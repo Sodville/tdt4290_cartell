@@ -10,7 +10,12 @@ class Car:
         self.farge = None
 
     def __repr__(self):
-        return f'Car({self.registreringsnummer!r}, {self.merke!r}, {self.modell!r}, {self.farge!r})'
+        return f'Car(
+            {self.registreringsnummer!r},
+            {self.merke!r},
+            {self.modell!r},
+            {self.farge!r}
+        )'
 
     def load_data_from_json(self, data):
         car_data = json.loads(data)
