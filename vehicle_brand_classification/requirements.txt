@@ -2,4 +2,5 @@ numpy
 keras
 pillow
 sklearn
+tensorflow
 console-progressbar
