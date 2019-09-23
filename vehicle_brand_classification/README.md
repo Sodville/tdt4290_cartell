@@ -12,6 +12,17 @@ This repository is to do car recognition by fine-tuning ResNet-152 with Cars Dat
 - [Keras](https://keras.io/#installation)
 - [OpenCV](https://opencv-python-tutroals.readthedocs.io/en/latest/)
 
+
+## Usage guide
+
+* Download the [ResNet152 weights](https://studntnu-my.sharepoint.com/:u:/g/personal/marvinre_ntnu_no/ESzLqaTtPL9MvqsQmVsNGAQBYvRgPcQkWGZIWjFe9nBwuA?e=C0nhQG) and the [model weights](https://studntnu-my.sharepoint.com/:u:/g/personal/marvinre_ntnu_no/EaDVkgV-Lf9PnHH65Ur_KAEBS7-K2ZqyacyjiQY_KWFT7A?e=NUks24) and place them in the directory `models/`
+
+* Put your test images in a directory called `test/`
+
+* Install the dependencies `pip install -r requirements.txt`
+
+* Run prediction on the test images `python3 demo.py`
+
 ## Dataset
 
 We use the Cars Dataset, which contains 16,185 images of 196 classes of cars. The data is split into 8,144 training images and 8,041 testing images, where each class has been split roughly in a 50-50 split.
