@@ -2,7 +2,6 @@ import json
 
 
 class Car:
-
     def __init__(self):
         self.registreringsnummer = None
         self.merke = None
