@@ -28,8 +28,8 @@ def scrape_from_regnr(license_plate):
     return {
         "registreringsnummer": license_plate,
         # assume all brands are one-worded
-        "merke": car_information.contents[1].string.split(' ', 1)[0],
-        "modell": car_information.contents[1].string.split(' ', 1)[1],
+        "merke": car_information.contents[1].string.split(" ", 1)[0],
+        "modell": car_information.contents[1].string.split(" ", 1)[1],
         "farge": car_information.contents[3].string
     }
 
