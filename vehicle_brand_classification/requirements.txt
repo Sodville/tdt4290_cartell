@@ -4,3 +4,4 @@ pillow
 sklearn
 tensorflow
 console-progressbar
+opencv-python
