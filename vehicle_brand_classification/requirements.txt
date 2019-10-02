@@ -3,4 +3,5 @@ keras
 pillow
 sklearn
 tensorflow
+opencv-python
 console-progressbar

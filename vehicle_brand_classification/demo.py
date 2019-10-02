@@ -15,8 +15,8 @@ if __name__ == '__main__':
     brands = sorted(brands)
 
     test_path = 'test/'
-    test_images = [f for f in os.listdir(test_path) if
-                   os.path.isfile(os.path.join(test_path, f)) and (f.endswith('.jpg') or f.endswith('.jpeg'))]
+    test_images = [f for f in os.listdir(test_path)]
+                   
     print(test_images)
 
     for i, image_name in enumerate(test_images):

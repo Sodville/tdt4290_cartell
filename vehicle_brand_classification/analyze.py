@@ -96,7 +96,7 @@ def calc_acc(y_pred, y_test):
 if __name__ == '__main__':
     img_width, img_height = 224, 224
     num_channels = 3
-    num_classes = 196
+    num_classes = 32
     class_names = range(1, (num_classes + 1))
     num_samples = 1629
 
