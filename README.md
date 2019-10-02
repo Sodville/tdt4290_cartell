@@ -8,7 +8,7 @@ To be able to run the project you need python 3.6 or higher. To setup a virtual 
 To setup a virtual environment, run the commands
 
     python -m venv env
-    source env/bin/active
+    source env/bin/activate
 
 To install the required modules, run the command
 
