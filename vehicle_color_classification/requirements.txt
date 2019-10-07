@@ -1,0 +1,6 @@
+tensorflow
+#tensorflow-gpu
+keras
+numpy<1.17
+matplotlib
+pillow
