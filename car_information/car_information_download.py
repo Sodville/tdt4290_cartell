@@ -28,34 +28,40 @@ def dump_json_to_file(directory, filepath, data):
         outfile.write(json.dumps(data))
 
 
-def fetch_data(license_numbers, output_directory):
+def fetch_data(license_numbers):
+    data = []
+
     for license_number in license_numbers:
-        filename = join(output_directory, license_number + ".json")
-        if not isfile(filename):
-            print("Fetching data of license number: " + license_number)
-            has_fetched = False
+        print("Fetching data of license number: " + license_number)
+        has_fetched = False
+
+        try:
+            car = get_data_from_vegvesenet(license_number)
+            has_fetched = True
+        except:
             try:
-                car = get_data_from_vegvesenet(license_number)
+                car = scrape_from_regnr(license_number)
                 has_fetched = True
             except:
-                try:
-                    car = scrape_from_regnr(license_number)
-                    has_fetched = True
-                except:
-                    pass
-            finally:
-                if has_fetched:
-                    dump_json_to_file(output_directory, license_number, car)
-                    print("Fetch ok")
-                    print(json.dumps(car))
-                else:
-                    print("Could not fetch data of: " + license_number)
-                time.sleep(1)
+                pass
+        finally:
+            if has_fetched:
+                data.append(car)
+                print("Fetch ok")
+                print(json.dumps(car))
+            else:
+                print("Could not fetch data of: " + license_number)
+            time.sleep(1)
+
+    return data
 
 if __name__ == "__main__":
     input_directory = sys.argv[1]
     output_directory = sys.argv[2]
 
     license_plates = get_license_plates_from_images(input_directory)
-    fetch_data(license_plates, output_directory)
+    data = fetch_data(license_plates)
+
+    for car in data:
+        dump_json_to_file(output_directory, car["registreringsnummer"], car)
 
