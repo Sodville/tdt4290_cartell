@@ -28,7 +28,13 @@ We also assume that the output directory exists.
 
 To locally download the data we run
 
-    python3 car_information_download.py [image_directory] [output_directory]
+    python3 car_information_download.py image_directory output_directory [output_directory_structure]
 
-This will output all data as json-files in a flat 
-folder structure into the specified output directory.
+output_directory_structure can have three values:
+
+* -C. This option will use the car colors as a label for 
+the output directory.
+* -B. This option will use the car brands as a label for
+the output directory.
+* Not defined. This option will not use any labels, thus
+all data is in a flat folder structure.
