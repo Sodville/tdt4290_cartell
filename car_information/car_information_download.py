@@ -1,17 +1,26 @@
 from os import listdir
 from os.path import isfile, join
-from car_information_service import get_data_from_vegvesenet, scrape_from_regnr
+from car_information_service import get_data_from_vegvesenet, \
+    scrape_from_regnr, identify_license_plate
 import time
 import json
 import sys
 
 
-def get_filenames_in_directory(directory):
-    filenames = []
-    for file in listdir(directory):
-        if isfile(join(directory, file)):
-            filenames.append(file.split(".")[0])
-    return filenames
+def get_license_plates_from_images(input_directory):
+    license_plates = []
+    images = listdir(input_directory)
+
+    for image in images:
+        print("Identifying plate from image " + image)
+        license_plate = identify_license_plate(input_directory, image)
+        if license_plate:
+            license_plates.append(license_plate)
+            print("Identified license plate " + license_plate)
+        else:
+            print("Could not identify license plate")
+
+    return license_plates
 
 
 def dump_json_to_file(directory, filepath, data):
@@ -47,6 +56,6 @@ if __name__ == "__main__":
     input_directory = sys.argv[1]
     output_directory = sys.argv[2]
 
-    license_numbers = get_filenames_in_directory(input_directory)
-    fetch_data(license_numbers, output_directory)
+    license_plates = get_license_plates_from_images(input_directory)
+    fetch_data(license_plates, output_directory)
 
