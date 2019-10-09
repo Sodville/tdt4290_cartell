@@ -34,7 +34,7 @@ def scrape_from_regnr(license_plate):
     }
 
 
-def get_from_api(license_plate):
+def get_data_from_vegvesenet(license_plate):
 
     response = requests.get(VEGVESENET_API_ENDPOINT + license_plate).json()
 

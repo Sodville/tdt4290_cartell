@@ -1,12 +1,9 @@
 from os import listdir
 from os.path import isfile, join
-from car_information_service import get_from_api, scrape_from_regnr
+from car_information_service import get_data_from_vegvesenet, scrape_from_regnr
 import time
 import json
-
-
-OUTPUT_DIRECTORY = "../datasets/car_data"
-IMAGE_DIRECTORY = "../datasets/car_images"
+import sys
 
 
 def get_filenames_in_directory(directory):
@@ -22,14 +19,14 @@ def dump_json_to_file(directory, filepath, data):
         outfile.write(json.dumps(data))
 
 
-def fetch_data(license_numbers):
+def fetch_data(license_numbers, output_directory):
     for license_number in license_numbers:
-        filename = join(OUTPUT_DIRECTORY, license_number + ".json")
+        filename = join(output_directory, license_number + ".json")
         if not isfile(filename):
             print("Fetching data of license number: " + license_number)
             has_fetched = False
             try:
-                car = get_from_api(license_number)
+                car = get_data_from_vegvesenet(license_number)
                 has_fetched = True
             except:
                 try:
@@ -39,12 +36,17 @@ def fetch_data(license_numbers):
                     pass
             finally:
                 if has_fetched:
-                    dump_json_to_file(OUTPUT_DIRECTORY, license_number, car)
+                    dump_json_to_file(output_directory, license_number, car)
                     print("Fetch ok")
                     print(json.dumps(car))
                 else:
                     print("Could not fetch data of: " + license_number)
                 time.sleep(1)
 
-license_numbers = get_filenames_in_directory(IMAGE_DIRECTORY)
-fetch_data(license_numbers)
+if __name__ == "__main__":
+    input_directory = sys.argv[1]
+    output_directory = sys.argv[2]
+
+    license_numbers = get_filenames_in_directory(input_directory)
+    fetch_data(license_numbers, output_directory)
+
