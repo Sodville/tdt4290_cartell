@@ -58,10 +58,18 @@ def fetch_data(license_numbers):
 if __name__ == "__main__":
     input_directory = sys.argv[1]
     output_directory = sys.argv[2]
+    try:
+        output_directory_format = sys.argv[3]
+    except:
+        output_directory_format = None
 
     license_plates = get_license_plates_from_images(input_directory)
     data = fetch_data(license_plates)
 
     for car in data:
-        dump_json_to_file(output_directory, car["registreringsnummer"], car)
-
+        dump_destination = output_directory
+        if output_directory_format == "-C":
+            dump_destination += "/" + car["farge"].lower()
+        elif output_directory_format == "-B":
+            dump_destination += "/" + car["merke"].lower()
+        dump_json_to_file(dump_destination, car["registreringsnummer"], car)
