@@ -1,5 +1,4 @@
-from os import listdir
-from os.path import isfile, join
+import os
 from car_information_service import get_data_from_vegvesenet, \
     scrape_from_regnr, identify_license_plate
 import time
@@ -9,7 +8,7 @@ import sys
 
 def get_license_plates_from_images(input_directory):
     license_plates = []
-    images = listdir(input_directory)
+    images = os.listdir(input_directory)
 
     for image in images:
         print("Identifying plate from image " + image)
@@ -24,7 +23,8 @@ def get_license_plates_from_images(input_directory):
 
 
 def dump_json_to_file(directory, filepath, data):
-    with open(join(directory, filepath + ".json"), "w") as outfile:
+    os.makedirs(directory, exist_ok=True)
+    with open(os.path.join(directory, filepath + ".json"), "w") as outfile:
         outfile.write(json.dumps(data))
 
 
