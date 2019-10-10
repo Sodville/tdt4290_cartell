@@ -1,15 +1,15 @@
 # Car Information
 
-We use [https://www.vegvesen.no/ws/no/vegvesen/kjoretoy/kjoretoyoppslag/v1/kjennemerkeoppslag/kjoretoy/](https://www.vegvesen.no/ws/no/vegvesen/kjoretoy/kjoretoyoppslag/v1/kjennemerkeoppslag/kjoretoy/)
-to collect data about cars. In order to collect the data we need the
+We use Vegvesenet's API [https://www.vegvesen.no/ws/no/vegvesen/kjoretoy/kjoretoyoppslag/v1/kjennemerkeoppslag/kjoretoy/](https://www.vegvesen.no/ws/no/vegvesen/kjoretoy/kjoretoyoppslag/v1/kjennemerkeoppslag/kjoretoy/)
+to collect data about cars. In order to collect data, we need the
 license plates of the car. For license plate detection we use
 OpenALPR Watchman.
 
 ## Car Information Service
 
 `car_information_service` has a function `get_data_from_vegvesenet`
-that calls Vegvesenet's API and return data about the car. The
-return value of this function is an object of the form
+that calls Vegvesenet's API and returns data about the car. The
+return value of this function is an object of the format
     
     {
         "registreringsnummer": "XX12345",
@@ -30,11 +30,13 @@ To locally download the data we run
 
     python3 download.py image_directory output_directory [output_directory_structure]
 
-output_directory_structure can have three values:
+output_directory_structure can have four values:
 
 * -C. This option will use the car colors as a label for 
 the output directory.
 * -B. This option will use the car brands as a label for
+the output directory.
+* -M. This option will use the car model as a label for
 the output directory.
 * Not defined. This option will not use any labels, thus
 all data is in a flat folder structure.
