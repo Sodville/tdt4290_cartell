@@ -1,6 +1,5 @@
 import os
-from car_information_service import get_data_from_vegvesenet, \
-    scrape_from_regnr, identify_license_plate
+from car_information_service import get_data_from_vegvesenet, identify_license_plate
 import time
 import json
 import sys
