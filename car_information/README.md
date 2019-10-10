@@ -1,6 +1,6 @@
 # Car Information
 
-We use [https://www.vegvesen.no/ws/no/vegvesen/kjoretoy/kjoretoyoppslag/v1/kjennemerkeoppslag/kjoretoy/]
+We use [https://www.vegvesen.no/ws/no/vegvesen/kjoretoy/kjoretoyoppslag/v1/kjennemerkeoppslag/kjoretoy/](https://www.vegvesen.no/ws/no/vegvesen/kjoretoy/kjoretoyoppslag/v1/kjennemerkeoppslag/kjoretoy/)
 to collect data about cars. In order to collect the data we need the
 license plates of the car. For license plate detection we use
 OpenALPR Watchman.
@@ -28,7 +28,7 @@ We also assume that the output directory exists.
 
 To locally download the data we run
 
-    python3 car_information_download.py image_directory output_directory [output_directory_structure]
+    python3 download.py image_directory output_directory [output_directory_structure]
 
 output_directory_structure can have three values:
 
