@@ -38,12 +38,6 @@ def fetch_data(license_numbers):
         try:
             car = get_data_from_vegvesenet(license_number)
             has_fetched = True
-        except:
-            try:
-                car = scrape_from_regnr(license_number)
-                has_fetched = True
-            except:
-                pass
         finally:
             if has_fetched:
                 data.append(car)
