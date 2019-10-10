@@ -71,5 +71,7 @@ if __name__ == "__main__":
         if output_directory_format == "-C":
             dump_destination += "/" + car["farge"].lower()
         elif output_directory_format == "-B":
-            dump_destination += "/" + car["merke"].lower()
+            dump_destination += "/" + car["merke"].lower().replace(" ", "_")
+        elif output_directory_format == "-M":
+            dump_destination += "/" + car["modell"].lower().replace(" ", "_")
         dump_json_to_file(dump_destination, car["registreringsnummer"], car)
