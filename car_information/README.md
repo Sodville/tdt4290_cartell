@@ -40,3 +40,10 @@ the output directory.
 the output directory.
 * Not defined. This option will not use any labels, thus
 all data is in a flat folder structure.
+
+## Unittests
+How to run the unit tests
+
+    python -m unittest
+
+This will look for tests recursivly and then test them.
