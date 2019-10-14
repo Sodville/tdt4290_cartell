@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import base64
 import json
 import os
-
+from model.Car import Car
 
 SECRET_KEY = 'sk_DEMODEMODEMODEMODEMODEMO'
 OPEN_ALPR_ENDPOINT = 'https://api.openalpr.com/v2/recognize_bytes' \
@@ -30,9 +30,8 @@ def get_data_from_vegvesenet(license_plate):
 
     response = requests.get(VEGVESENET_API_ENDPOINT + license_plate).json()
 
-    return {
-        "registreringsnummer": response["kjennemerke"],
-        "merke": response["tekniskKjoretoy"]["merke"],
-        "modell": response["tekniskKjoretoy"]["handelsbetegnelse"],
-        "farge": response["tekniskKjoretoy"]["karosseri"]["farge"]
-    }
+    car = Car()
+    car = car.load_data_from_vegvesenet(response)
+
+    return car.get_data()
+
