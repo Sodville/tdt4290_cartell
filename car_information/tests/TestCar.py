@@ -1,4 +1,4 @@
-from Model.Car import Car
+from model.Car import Car
 import os.path
 import json
 import unittest
