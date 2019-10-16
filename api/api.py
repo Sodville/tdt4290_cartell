@@ -1,4 +1,4 @@
-from flask import Flask 
+from flask import Flask
 
 app = Flask(__name__)
 app.config["DEBUG"] = False
@@ -8,4 +8,4 @@ app.config["DEBUG"] = False
 def home():
     return "OK"
 
-app.run()
+app.run(host="0.0.0.0")
