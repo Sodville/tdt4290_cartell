@@ -1,91 +1,77 @@
 import os
+import shutil
 from car_information_service import get_data_from_vegvesenet, \
     identify_license_plate
-import time
-import json
 import sys
-
-
-def get_license_plates_from_images(input_directory):
-    data = []
-    images = os.listdir(input_directory)
-
-    for image in images:
-        print("Identifying plate from image " + image)
-        car = {}
-        car["image"] = image
-        license_plate = identify_license_plate(input_directory, image)
-        if license_plate:
-            car["registreringsnummer"] = license_plate
-            print("Identified license plate " + license_plate)
-        else:
-            car["registreringsnummer"] = None
-            print("Could not identify license plate")
-        data.append(car)
-
-    return data
-
-
-def fetch_data(cars):
-    for car in cars:
-        license_number = car["registreringsnummer"]
-        if license_number:
-            print("Fetching data of license number: " + license_number)
-            has_fetched = False
-            try:
-                data = get_data_from_vegvesenet(license_number)
-                has_fetched = True
-            finally:
-                if has_fetched:
-                    car["data"] = data
-                    print("Fetch ok")
-                    print(json.dumps(data))
-                else:
-                    print("Could not fetch data of: " + license_number)
-    return cars
 
 
 def safe_directory(directory):
     os.makedirs(directory, exist_ok=True)
 
 
-def move_image(input_directory, output_directory):
-    os.rename(input_directory, output_directory)
+def copy_image(image, input_directory, output_directory):
+    safe_directory(output_directory)
+    shutil.copy(input_directory + image, output_directory + image)
+
+
+def delete_file(filepath):
+    os.unlink(filepath)
+
+
+def init_output_directory(directory):
+    safe_directory(directory)
+    safe_directory(directory + "/color")
+    safe_directory(directory + "/brand")
+    safe_directory(directory + "/model")
+    safe_directory(directory + "/unlabelled")
+
+
+def label_image(car, image, input_directory, output_directory):
+    print("Label brand")
+    label_brand(car, image, input_directory, output_directory)
+    print("Label color")
+    label_color(car, image, input_directory, output_directory)
+    print("Label model")
+    label_model(car, image, input_directory, output_directory)
+
+
+def label_brand(car, image, input_directory, output_directory):
+    assert car["merke"]
+    destination_path = output_directory + "/brand/" + car["merke"] + "/"
+    copy_image(image, input_directory, destination_path)
+
+
+def label_color(car, image, input_directory, output_directory):
+    assert car["farge"]
+    destination_path = output_directory + "/color/" + car["farge"] + "/"
+    copy_image(image, input_directory, destination_path)
+
+
+def label_model(car, image, input_directory, output_directory):
+    assert car["modell"]
+    destination_path = output_directory + "/model/" + car["modell"] + "/"
+    copy_image(image, input_directory, destination_path)
 
 
 if __name__ == "__main__":
     input_directory = sys.argv[1]
     output_directory = sys.argv[2]
-    try:
-        output_directory_format = sys.argv[3]
-    except:
-        output_directory_format = None
 
-    car_data = get_license_plates_from_images(input_directory)
-    car_data = fetch_data(car_data)
+    images = os.listdir(input_directory)
+    init_output_directory(output_directory)
 
-    for car in car_data:
-        image = car["image"]
-
-        if car["registreringsnummer"]:
-            data = car["data"]
-
-            destination = output_directory
-            if output_directory_format == "-C":
-                destination += "/" + data["farge"].lower()
-            elif output_directory_format == "-B":
-                destination += "/" + data["merke"].lower().replace(" ", "_")
-            elif output_directory_format == "-M":
-                destination += "/" + data["modell"].lower().replace(" ", "_")
-            else:
-                print("Choose default labelling brand")
-                destination += "/" + data["merke"].lower().replace(" ", "_")
-            destination += "/"
-
-            safe_directory(destination)
-            move_image(input_directory + image, destination + image)
+    for image in images:
+        print("Identifying license plate for image " + image)
+        license_plate = identify_license_plate(input_directory, image)
+        if license_plate:
+            print("Identified license plate: " + license_plate)
+            print("Fetching data for license plate " + license_plate)
+            car = get_data_from_vegvesenet(license_plate)
+            print(car)
+            print("Labels image into data sets")
+            label_image(car, image, input_directory, output_directory)
         else:
-            destination = output_directory + "/license_plate_not_found/"
-            safe_directory(destination)
-            move_image(input_directory + image, destination + image)
- 
+            print("Could not identify license plate of image " + image)
+            destination = output_directory + "/unlabelled/"
+            copy_image(image, input_directory, destination)
+        # delete_file(input_directory + image)
