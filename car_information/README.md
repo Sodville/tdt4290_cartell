@@ -26,9 +26,9 @@ has the license plate as the name, eg. `XX12345.json`.
 
 We also assume that the output directory exists.
 
-To locally download the data we run
+To locally label the data we run
 
-    python3 download.py image_directory output_directory [output_directory_structure]
+    python3 label.py image_directory output_directory [output_directory_structure]
 
 output_directory_structure can have four values:
 
