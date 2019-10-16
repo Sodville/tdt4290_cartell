@@ -65,6 +65,8 @@ if __name__ == "__main__":
     car_data = fetch_data(car_data)
 
     for car in car_data:
+        image = car["image"]
+
         if car["registreringsnummer"]:
             data = car["data"]
 
@@ -75,8 +77,15 @@ if __name__ == "__main__":
                 destination += "/" + data["merke"].lower().replace(" ", "_")
             elif output_directory_format == "-M":
                 destination += "/" + data["modell"].lower().replace(" ", "_")
+            else:
+                print("Choose default labelling brand")
+                destination += "/" + data["merke"].lower().replace(" ", "_")
             destination += "/"
 
             safe_directory(destination)
-            image = car["image"]
             move_image(input_directory + image, destination + image)
+        else:
+            destination = output_directory + "/license_plate_not_found/"
+            safe_directory(destination)
+            move_image(input_directory + image, destination + image)
+ 
