@@ -11,7 +11,7 @@ def safe_directory(directory):
 
 def copy_image(image, input_directory, output_directory):
     safe_directory(output_directory)
-    shutil.copy(input_directory + image, output_directory + image)
+    shutil.copy(os.path.join(input_directory, image), os.path.join(output_directory, image))
 
 
 def delete_file(filepath):
