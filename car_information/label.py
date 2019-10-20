@@ -49,7 +49,7 @@ def label_color(car, image, source_directory, destination_directory):
 
 def label_model(car, image, source_directory, destination_directory):
     assert car["modell"]
-    destination_directory += "/model/" + car["modell"] + "/"
+    destination_directory = os.path.join(destination_directory, "model", car["modell"])
     copy_image(image, source_directory, destination_directory)
 
 
