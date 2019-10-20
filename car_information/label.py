@@ -72,6 +72,6 @@ if __name__ == "__main__":
             label_image(car, image, image_directory, dataset_directory)
         else:
             print("Could not identify license plate of image " + image)
-            destination = dataset_directory + "/unlabelled/"
+            destination = os.path.join(dataset_directory, "unlabelled")
             copy_image(image, image_directory, destination)
         # delete_file(input_directory + image)
