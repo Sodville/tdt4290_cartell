@@ -37,7 +37,7 @@ def label_image(car, image, source_directory, destination_directory):
 
 def label_brand(car, image, source_directory, destination_directory):
     assert car["merke"]
-    destination_directory += "/brand/" + car["merke"] + "/"
+    destination_directory = os.path.join(destination_directory, "brand", car["merke"])
     copy_image(image, source_directory, destination_directory)
 
 
