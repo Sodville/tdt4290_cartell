@@ -20,10 +20,10 @@ def delete_file(filepath):
 
 def init_output_directory(directory):
     safe_directory(directory)
-    safe_directory(directory + "/color")
-    safe_directory(directory + "/brand")
-    safe_directory(directory + "/model")
-    safe_directory(directory + "/unlabelled")
+    safe_directory(os.path.join(directory, "color"))
+    safe_directory(os.path.join(directory, "brand"))
+    safe_directory(os.path.join(directory, "model"))
+    safe_directory(os.path.join(directory, "unlabelled"))
 
 
 def label_image(car, image, source_directory, destination_directory):
@@ -74,4 +74,3 @@ if __name__ == "__main__":
             print("Could not identify license plate of image " + image)
             destination = os.path.join(dataset_directory, "unlabelled")
             copy_image(image, image_directory, destination)
-        # delete_file(input_directory + image)
