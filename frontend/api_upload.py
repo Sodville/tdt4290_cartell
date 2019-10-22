@@ -3,13 +3,13 @@ import urllib.request
 from api_setup import api_setup
 from flask import Flask, request, redirect, jsonify
 from werkzeug.utils import secure_filename
+import fleep
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
+def allowed_file(file):
+    info = fleep.get(file.read(128))
+    return info.extension[0] in ALLOWED_EXTENSIONS
 
 @api_setup.route('/file-upload', methods=['POST'])
 def upload_file():
@@ -23,7 +23,7 @@ def upload_file():
         resp = jsonify({'message': 'No file selected for uploading'})
         resp.status_code = 400
         return resp
-    if file and allowed_file(file.filename):
+    if file and allowed_file(file):
         filename = secure_filename(file.filename)
         file.save(os.path.join(api_setup.config['UPLOAD_FOLDER'], filename))
         resp = jsonify({'message': 'File successfully uploaded'})
