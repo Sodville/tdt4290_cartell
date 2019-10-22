@@ -26,9 +26,11 @@ def upload_file():
         resp = jsonify({'message': 'No file selected for uploading'})
         resp.status_code = 400
         return resp
-    if file: #and allowed_file(file): #TODO: fix allowed_file
+    if file and allowed_file(file):
+        file.seek(0) # in case file was read through earlier
         encoded_image = file.read()
         image = load_image(encoded_image)
+
         pred = predict(model, image, brands)
         resp = jsonify(str(pred))
         resp.status_code = 201

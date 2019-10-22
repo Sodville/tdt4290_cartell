@@ -1,5 +1,4 @@
 import keras
-import tensorflow as tf
 import efficientnet.keras as efn
 from PIL import Image
 import io
@@ -19,7 +18,6 @@ def load_image(encoded_img, target_size=(512, 512)):
     return img_array
 
 def load_model(weights_path):
-    import keras.models
     model = keras.models.load_model(weights_path)
     model._make_predict_function() # to fix weird Keras error with Flask about missing Tensor
     return model
