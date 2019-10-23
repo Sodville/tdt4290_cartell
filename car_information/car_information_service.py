@@ -21,15 +21,29 @@ def identify_license_plate(path, image):
 
         if len(results) == 0:
             raise LicensePlateNotDetectedException("Could not detect any license plates")
+          
+        # If several plates are in the picture, choose the on that takes the most space  
+        license_plate = get_largest_plate(results)
 
-        license_plate = results[0].get("plate")
         if not is_valid_license_plate(license_plate):
             raise IllegalLicensePlateException("The license plate does not follow Norwegian convention")
 
-        return result_json["results"][0]["plate"]
+        return license_plate
     finally:
         pass
 
+
+def get_largest_plate(result_json):
+    largest_plate = [0, 0]  # [0] is the plate index, [1] is the square size of the given plate
+    for i in range(len(result_json)):
+        vehicle_region = result_json[i].get("vehicle_region")
+        plate_height = vehicle_region.get("height")
+        plate_width = vehicle_region.get("width")
+        plate_size = plate_height*plate_width
+        if plate_size > largest_plate[1]:
+            largest_plate[0] = i
+            largest_plate[1] = plate_size
+    return result_json[largest_plate[0]].get("plate")
 
 def is_valid_license_plate(license_plate):
     for i in range(len(license_plate)):
@@ -38,7 +52,6 @@ def is_valid_license_plate(license_plate):
         if i > 2 and license_plate[i].isalpha():
             return False
     return True
-
 
 def get_data_from_vegvesenet(license_plate):
 
@@ -72,6 +85,6 @@ class LicensePlateNotFoundException(Exception):
 class LicensePlateNotDetectedException(Exception):
     pass
 
-
+  
 class IllegalLicensePlateException(Exception):
     pass
