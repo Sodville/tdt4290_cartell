@@ -20,8 +20,18 @@ def identify_license_plate(path, image):
     try:
         r = requests.post(OPEN_ALPR_ENDPOINT, data=img_base64)
         result_json = r.json()
+        print(result_json)
 
-        return result_json["results"][0]["plate"]
+        # If several plates are in the image, the one with the largest square area should be returned
+        largest_plate = [0, 0]  # [0] is plate_index [1] is size of that plate
+        for i in range (len(result_json.get("results)"))):
+            plate_height = result_json.get("results")[i].get("vehicle_region").get("height")
+            plate_width = result_json.get("results")[i].get("vehicle_region").get("width")
+            plate_size = plate_height*plate_width
+            if plate_size > largest_plate[1]:
+                largest_plate[0] = i
+                largest_plate[1] = plate_size
+        return result_json["results"][largest_plate[0]]["plate"]
     except:
         return None
 
@@ -35,3 +45,4 @@ def get_data_from_vegvesenet(license_plate):
 
     return car.get_data()
 
+identify_license_plate()
