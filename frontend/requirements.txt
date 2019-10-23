@@ -1,6 +1,7 @@
 FLASK==1.1.1
-keras
-tensorflow
-efficientnet
+keras==2.2.5
+tensorflow==1.14.0
+efficientnet==1.0.0
 Pillow
-fleep
+Flask==1.1.1
+fleep==1.0.1
