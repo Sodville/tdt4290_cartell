@@ -20,20 +20,39 @@ def identify_license_plate(path, image):
     try:
         r = requests.post(OPEN_ALPR_ENDPOINT, data=img_base64)
         result_json = r.json()
+        results = result_json["results"]
 
-        # If several plates are in the image, the one with the largest square area should be returned
-        largest_plate = [0, 0]  # [0] is plate_index [1] is size of that plate
-        for i in range (len(result_json.get("results)"))):
-            plate_height = result_json.get("results")[i].get("vehicle_region").get("height")
-            plate_width = result_json.get("results")[i].get("vehicle_region").get("width")
-            plate_size = plate_height*plate_width
-            if plate_size > largest_plate[1]:
-                largest_plate[0] = i
-                largest_plate[1] = plate_size
-        return result_json["results"][largest_plate[0]]["plate"]
-    except:
-        return None
+        if len(results) == 0:
+            raise LicensePlateNotDetectedException("Could not detect any license plates")
 
+        license_plate = get_largest_plate(results)
+
+        if not is_valid_license_plate(license_plate):
+            raise IllegalLicensePlateException("The license plate does not follow Norwegian convention")
+
+        return license_plate
+    finally:
+        pass
+
+
+def get_largest_plate(result_json):  # If several plates are in the picture, choose the on that takes the most space
+    largest_plate = [0, 0]  # [0] is the plate index, [1] is the square size of the given plate
+    for i in range(len(result_json)):
+        plate_height = result_json[i].get("vehicle_region").get("height")
+        plate_width = result_json[i].get("vehicle_region").get("width")
+        plate_size = plate_height*plate_width
+        if plate_size > largest_plate[1]:
+            largest_plate[0] = i
+            largest_plate[1] = plate_size
+    return result_json[largest_plate[0]].get("plate")
+
+def is_valid_license_plate(license_plate):
+    for i in range(len(license_plate)):
+        if i < 2 and license_plate[i].isdigit():
+            return False
+        if i > 2 and license_plate[i].isalpha():
+            return False
+    return True
 
 def get_data_from_vegvesenet(license_plate):
 
