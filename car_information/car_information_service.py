@@ -1,8 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
 import base64
-import json
-import os
 from model.Car import Car
 
 SECRET_KEY = 'sk_DEMODEMODEMODEMODEMODEMO'
@@ -24,7 +21,8 @@ def identify_license_plate(path, image):
 
         if len(results) == 0:
             raise LicensePlateNotDetectedException("Could not detect any license plates")
-
+          
+        # If several plates are in the picture, choose the on that takes the most space  
         license_plate = get_largest_plate(results)
 
         if not is_valid_license_plate(license_plate):
@@ -35,11 +33,12 @@ def identify_license_plate(path, image):
         pass
 
 
-def get_largest_plate(result_json):  # If several plates are in the picture, choose the on that takes the most space
+def get_largest_plate(result_json):
     largest_plate = [0, 0]  # [0] is the plate index, [1] is the square size of the given plate
     for i in range(len(result_json)):
-        plate_height = result_json[i].get("vehicle_region").get("height")
-        plate_width = result_json[i].get("vehicle_region").get("width")
+        vehicle_region = result_json[i].get("vehicle_region")
+        plate_height = vehicle_region.get("height")
+        plate_width = vehicle_region.get("width")
         plate_size = plate_height*plate_width
         if plate_size > largest_plate[1]:
             largest_plate[0] = i
@@ -57,10 +56,35 @@ def is_valid_license_plate(license_plate):
 def get_data_from_vegvesenet(license_plate):
 
     response = requests.get(VEGVESENET_API_ENDPOINT + license_plate).json()
+    status = response.get("status")
+    if status == 500:
+        raise ServiceUnavailableException("Vegvesenet's service is not available. Used up quota of calls.")
+    if status == 404:
+        raise LicensePlateNotFoundException("No car registered with license plate: " + license_plate)
 
     car = Car()
     car = car.load_data_from_vegvesenet(response)
+    if car.has_loaded_data():
+        return car.get_data()
+    else:
+        raise CarInformationNotLoadedException("Could not load car information on license plate " + license_plate)
 
-    return car.get_data()
 
-identify_license_plate()
+class CarInformationNotLoadedException(Exception):
+    pass
+
+
+class ServiceUnavailableException(Exception):
+    pass
+
+
+class LicensePlateNotFoundException(Exception):
+    pass
+
+
+class LicensePlateNotDetectedException(Exception):
+    pass
+
+  
+class IllegalLicensePlateException(Exception):
+    pass

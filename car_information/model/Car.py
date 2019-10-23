@@ -25,11 +25,18 @@ class Car:
         return self
 
     def load_data_from_vegvesenet(self, data):
-        self.registreringsnummer = data["kjennemerke"]
-        self.merke = data["tekniskKjoretoy"]["merke"]
-        self.modell = data["tekniskKjoretoy"]["handelsbetegnelse"]
-        self.farge = data["tekniskKjoretoy"]["karosseri"]["farge"]
+        try:
+            self.registreringsnummer = data["kjennemerke"]
+            self.merke = data["tekniskKjoretoy"]["merke"]
+            self.modell = data["tekniskKjoretoy"]["handelsbetegnelse"]
+            self.farge = data["tekniskKjoretoy"]["karosseri"]["farge"]
+        except KeyError:
+            print("Could not load from vegvesenet")
+            print(data)
         return self
+
+    def has_loaded_data(self):
+        return self.registreringsnummer and self.merke and self.modell and self.farge
 
     def get_data(self):
         return {

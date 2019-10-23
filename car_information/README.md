@@ -21,29 +21,22 @@ return value of this function is an object of the format
 
 ## Generate data set from images
 
-We assume that every image in the image directory
-has the license plate as the name, eg. `XX12345.json`.
+To locally label the data we run
 
-We also assume that the output directory exists.
+    python3 label.py image_directory output_directory
 
-To locally download the data we run
+The script will produce data sets with
+three kinds of labels:
+* Color
+* Brand
+* Model
 
-    python3 download.py image_directory output_directory [output_directory_structure]
-
-output_directory_structure can have four values:
-
-* -C. This option will use the car colors as a label for 
-the output directory.
-* -B. This option will use the car brands as a label for
-the output directory.
-* -M. This option will use the car model as a label for
-the output directory.
-* Not defined. This option will not use any labels, thus
-all data is in a flat folder structure.
+Images where the license plates are not identified are
+put into a directory with the name `unlabelled`.
 
 ## Unittests
 How to run the unit tests
 
     python -m unittest
 
-This will look for tests recursivly and then test them.
+This will look for tests recursively and then test them.
