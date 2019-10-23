@@ -20,7 +20,6 @@ def identify_license_plate(path, image):
     try:
         r = requests.post(OPEN_ALPR_ENDPOINT, data=img_base64)
         result_json = r.json()
-        print(result_json)
 
         # If several plates are in the image, the one with the largest square area should be returned
         largest_plate = [0, 0]  # [0] is plate_index [1] is size of that plate
