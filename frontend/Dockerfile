@@ -1,4 +1,4 @@
-FROM python:3
+FROM tensorflow/tensorflow:1.12.0-py3
 
 EXPOSE 5000
 
