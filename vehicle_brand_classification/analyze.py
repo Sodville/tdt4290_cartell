@@ -1,52 +1,33 @@
 # -*- coding: utf-8 -*-
-
 import os
 
 import matplotlib.pyplot as plt
 import numpy as np
 from keras.preprocessing import image
 from sklearn.metrics import confusion_matrix
-from tqdm import tqdm
 
-from utils import load_model
+import efficientnet.keras as efn
+from utils import load_model, get_brands, get_activation_map, load_image
 
-
-def decode_predictions(preds, top=5):
-    results = []
-    for pred in preds:
-        top_indices = pred.argsort()[-top:][::-1]
-        result = [(class_names[i], pred[i]) for i in top_indices]
-        result.sort(key=lambda x: x[1], reverse=True)
-        results.append(result)
-    return results
-
-
-def predict(img_dir, model):
+def predict(img_dir, model, target_size=(224,224)):
     img_files = []
     for root, dirs, files in os.walk(img_dir, topdown=False):
         for name in files:
             img_files.append(os.path.join(root, name))
     img_files = sorted(img_files)
 
-    y_pred = []
-    y_test = []
+    y_pred, y_true = [], []
+    for img_path in img_files:
+        x = load_image(img_path, target_size) / 255.
 
-    for img_path in tqdm(img_files):
-        # print(img_path)
-        img = image.load_img(img_path, target_size=(224, 224))
-        x = image.img_to_array(img)
         preds = model.predict(x[None, :, :, :])
-        decoded = decode_predictions(preds, top=1)
-        pred_label = decoded[0][0][0]
-        # print(pred_label)
+        print(img_path, brands[preds.argmax()], preds.max())
+        pred_label = brands[preds.argmax()]
         y_pred.append(pred_label)
-        tokens = img_path.split(os.pathsep)
-        class_id = int(tokens[-2])
-        # print(str(class_id))
-        y_test.append(class_id)
-
-    return y_pred, y_test
-
+        tokens = img_path.split(os.path.sep)
+        class_id = tokens[-2]
+        y_true.append(class_id)
+    return y_pred, y_true
 
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
@@ -62,66 +43,58 @@ def plot_confusion_matrix(cm, classes,
     else:
         print('Confusion matrix, without normalization')
 
-    print(cm)
+    fig, ax = plt.subplots()
 
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-    # tick_marks = np.arange(len(classes))
-    # plt.xticks(tick_marks, classes, rotation=45)
-    # plt.yticks(tick_marks, classes)
+    img = ax.imshow(cm, interpolation='nearest', cmap=cmap)
+    ax.figure.colorbar(img, ax=ax)
+    # show all ticks
+    ax.set(xticks=np.arange(cm.shape[1]),
+       yticks=np.arange(cm.shape[0]),
+       # ... and label them with the respective list entries
+       xticklabels=classes, yticklabels=classes,
+       title=title,
+       ylabel='True label',
+       xlabel='Predicted label'
+    )
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right", rotation_mode="anchor")
+    fig.tight_layout()
 
-    # fmt = '.2f' if normalize else 'd'
-    # thresh = cm.max() / 2.
-    # for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-    #     plt.text(j, i, format(cm[i, j], fmt),
-    #              horizontalalignment="center",
-    #              color="white" if cm[i, j] > thresh else "black")
-
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
-
-
-def calc_acc(y_pred, y_test):
+def calc_acc(y_pred, y_true):
     num_corrects = 0
     for i in range(num_samples):
         pred = y_pred[i]
-        test = y_test[i]
+        test = y_true[i]
         if pred == test:
             num_corrects += 1
     return num_corrects / num_samples
 
-
 if __name__ == '__main__':
-    img_width, img_height = 224, 224
-    num_channels = 3
-    num_classes = 196
-    class_names = range(1, (num_classes + 1))
-    num_samples = 1629
+    val_dir = "./data/valid"
+    num_samples = sum([len(files) for _, _, files in os.walk(val_dir)])
+    img_width, img_height = 512, 512
 
-    print("\nLoad the trained ResNet model....")
-    model = load_model()
+    brands = get_brands()
 
-    y_pred, y_test = predict('data/valid', model)
-    print("y_pred: " + str(y_pred))
-    print("y_test: " + str(y_test))
+    print("\nLoading the fine-tuned ResNet model....")
+    weights_path='efficientnetb1_512.hdf5'
+    model = load_model(weights_path)
 
-    acc = calc_acc(y_pred, y_test)
+    y_pred, y_true = predict(val_dir, model, (img_width, img_height))
+    #get_activation_map(model, "./data/valid/mitsubishi/737_1694660536.jpg", (img_width, img_height))
+
+    acc = calc_acc(y_pred, y_true)
     print("%s: %.2f%%" % ('acc', acc * 100))
 
     # Compute confusion matrix
-    cnf_matrix = confusion_matrix(y_test, y_pred)
+    cnf_matrix = confusion_matrix(y_true, y_pred, labels=brands)
     np.set_printoptions(precision=2)
 
     # Plot non-normalized confusion matrix
-    plt.figure()
-    plot_confusion_matrix(cnf_matrix, classes=class_names,
+    plot_confusion_matrix(cnf_matrix, classes=brands,
                           title='Confusion matrix, without normalization')
 
     # Plot normalized confusion matrix
-    plt.figure()
-    plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
+    plot_confusion_matrix(cnf_matrix, classes=brands, normalize=True,
                           title='Normalized confusion matrix')
 
     plt.show()

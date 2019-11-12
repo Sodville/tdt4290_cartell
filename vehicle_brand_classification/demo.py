@@ -3,16 +3,14 @@ import cv2
 import keras.backend as K
 import numpy as np
 
-from utils import load_model
+from utils import load_model, get_brands
 
 if __name__ == '__main__':
     img_width, img_height = 224, 224
     weights_path='models/model.26-0.95.hdf5'
     model = load_model(weights_path)
 
-    with open("brands.txt", "r") as f:
-        brands = [line.strip().lower() for line in f.readlines()]
-    brands = sorted(brands)
+    brands = get_brands()
 
     test_path = 'test/'
     test_images = [f for f in os.listdir(test_path) if

@@ -1,54 +1,79 @@
 import keras
-from resnet_152 import resnet152_model
+from keras.models import Model, Sequential
+from keras import layers
+from keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from keras.preprocessing.image import ImageDataGenerator
-from keras.callbacks import CSVLogger, ModelCheckpoint, EarlyStopping
-from keras.callbacks import ReduceLROnPlateau
+from keras.callbacks import ModelCheckpoint, CSVLogger, EarlyStopping, ReduceLROnPlateau, TensorBoard
+import efficientnet.keras as efn
 
-img_width, img_height = 224, 224
-num_channels = 3
-train_data = 'data/train'
-valid_data = 'data/valid'
-num_classes = 32
-verbose = 1
-batch_size = 16
-num_epochs = 10000
-patience = 50
+img_width, img_height = 512, 512
 
-if __name__ == '__main__':
-    # build a classifier model
-    model = resnet152_model(img_height, img_width, num_channels, num_classes)
+# dimensions of our images.
+num_classes = 14
 
+output_weights = 'efficientnetb0.hdf5'
+
+train_data_dir = 'data/train'
+validation_data_dir = 'data/valid'
+
+num_epochs = 200
+batch_size = 6
+patience=50
+
+def make_model():
+    # create the base pre-trained model
+    base_model = efn.EfficientNetB0(input_shape=(img_width, img_height, 3), include_top=False)
+    # add a global spatial average pooling layer
+    x = base_model.output
+    x = GlobalAveragePooling2D()(x)
+    predictions = Dense(num_classes, activation='softmax')(x)
+    model = Model(inputs=base_model.input, outputs=predictions)
+
+    model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
+
+    return base_model, model
+
+if __name__ == "__main__":
     # prepare data augmentation configuration
-    train_data_gen = ImageDataGenerator(rotation_range=20.,
+    train_datagen = ImageDataGenerator(rotation_range=20.,
                                         width_shift_range=0.1,
+                                        rescale= 1./255.,
                                         height_shift_range=0.1,
                                         zoom_range=0.2,
                                         horizontal_flip=True)
-    valid_data_gen = ImageDataGenerator()
-    # callbacks
-    tensor_board = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=True)
+    validation_datagen = ImageDataGenerator(rescale=1./255.)
+
+    train_generator = train_datagen.flow_from_directory(
+        train_data_dir,
+        target_size=(img_height, img_width),
+        batch_size=batch_size,
+        class_mode='categorical'
+    )
+
+    validation_generator = validation_datagen.flow_from_directory(
+        validation_data_dir,
+        target_size=(img_height, img_width),
+        batch_size=batch_size,
+        class_mode='categorical'
+    )
+
+    # Callbacks
+    tensor_board = TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=True)
     log_file_path = 'logs/training.log'
     csv_logger = CSVLogger(log_file_path, append=False)
     early_stop = EarlyStopping('val_acc', patience=patience)
-    reduce_lr = ReduceLROnPlateau('val_acc', factor=0.1, patience=int(patience / 4), verbose=1)
-    trained_models_path = 'models/model'
-    model_names = trained_models_path + '.{epoch:02d}-{val_acc:.2f}.hdf5'
-    model_checkpoint = ModelCheckpoint(model_names, monitor='val_acc', verbose=1, save_best_only=True)
+    reduce_lr = ReduceLROnPlateau('val_acc', factor=0.1, patience=10, verbose=1)
+    model_checkpoint = ModelCheckpoint(output_weights, monitor='val_acc', verbose=1, save_best_only=True, save_weights_only=False)
     callbacks = [tensor_board, model_checkpoint, csv_logger, early_stop, reduce_lr]
 
-    # generators
-    train_generator = train_data_gen.flow_from_directory(train_data, (img_width, img_height), batch_size=batch_size,
-                                                         class_mode='categorical')
-    valid_generator = valid_data_gen.flow_from_directory(valid_data, (img_width, img_height), batch_size=batch_size,
-                                                         class_mode='categorical')
-
-    # fine tune the model
+    _, model = make_model()
+    # train the model on the new data for a few epochs
     model.fit_generator(
         train_generator,
-        steps_per_epoch=train_generator.n / batch_size,
-        validation_data=valid_generator,
-        validation_steps=valid_generator.n / batch_size,
+        steps_per_epoch=train_generator.n // batch_size,
         epochs=num_epochs,
+        validation_data=validation_generator,
+        validation_steps= validation_generator.n // batch_size,
         callbacks=callbacks,
-        verbose=verbose
+        verbose=1
     )
