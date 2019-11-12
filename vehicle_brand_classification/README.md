@@ -16,7 +16,7 @@ It is recommended to run this from a virtual environment of choice(such as Anaco
 
 ### Fine-tuning
 
-*This section can be ignored if you're not interested in fine-tuning your own model.*
+*This section can be ignored if you're not interested in fine-tuning your own model. You can alternatively download our model weights from [here](https://drive.google.com/open?id=1CXWGf2hj_sJXIsSE4wfqUOqIv-EsYf7x) if you want to skip this section. *
 
 To fine-tune the model you first need to download a dataset.
 
