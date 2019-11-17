@@ -56,7 +56,7 @@ You should now be able to see the training accuracies and losses in `localhost:6
 ### Analysis
 To calculate the accuracy on a given test set and compute the corresponding confusion matrix you can run the following script
 ```bash
-$ python3 analyze.py -t [PATH_TO_TEST_DIRECTORY] -m [PATH_TO_MODEL]
+$ python3 analyze.py [-h] [-t TEST_PATH] [-m MODEL_PATH]
 ```
 For more help use the `-h` flag.
 
@@ -64,6 +64,6 @@ For more help use the `-h` flag.
 To run a demo of the model, where prediction is performed on an input image and a heatmap is optionally output, you can run the following:
 
 ```bash
-$ python3 demo.py -i PATH_TO_INPUT_IMAGE -m [PATH_TO_MODEL]
+$ python3 demo.py [-h] -i IMAGE_PATH [-m MODEL_PATH] [-hm]
 ```
 If `-hm` is passed as an argument, the heatmap for the prediction will be created and saved in `heatmap.jpg`. For more help use the `-h` flag.
