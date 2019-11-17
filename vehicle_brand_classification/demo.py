@@ -1,35 +1,21 @@
-import os
-import cv2
-import keras.backend as K
-import numpy as np
+import argparse
+import efficientnet.keras as efn
+from utils import load_model, get_brands, load_image
 
-from utils import load_model, get_brands
+WIDTH, HEIGHT = 512, 512
+brands = get_brands()
+
+def make_arg_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--image_path', help='Image path', dest='image_path', required=True)
+    parser.add_argument('-m', '--model_path', help='Model path', default='efficientnetb0_512.hdf5', dest='model_path')
+    return parser
 
 if __name__ == '__main__':
-    img_width, img_height = 224, 224
-    weights_path='models/model.26-0.95.hdf5'
-    model = load_model(weights_path)
+    args = make_arg_parser().parse_args()
+    model = load_model(args.model_path)
 
-    brands = get_brands()
+    img = load_image(args.image_path, (WIDTH, HEIGHT)) / 255.
 
-    test_path = 'test/'
-    test_images = [f for f in os.listdir(test_path) if
-                   os.path.isfile(os.path.join(test_path, f)) and (f.endswith('.jpg') or f.endswith('.jpeg'))]
-    print(test_images)
-
-    for i, image_name in enumerate(test_images):
-        filename = os.path.join(test_path, image_name)
-        print('Start processing image: {}'.format(filename))
-        bgr_img = cv2.imread(filename)
-        bgr_img = cv2.resize(bgr_img, (img_width, img_height), cv2.INTER_CUBIC)
-
-        rgb_img = cv2.cvtColor(bgr_img, cv2.COLOR_BGR2RGB)
-        rgb_img = np.expand_dims(rgb_img, 0)
-
-        preds = model.predict(rgb_img)
-        prob = np.max(preds)
-        class_id = np.argmax(preds)
-
-        print('Predict: {}, prob: {}'.format(brands[class_id], prob))
-
-    K.clear_session()
+    preds = model.predict(img[None, :, :, :])
+    print(args.image_path, "predicted as",  brands[preds.argmax()], "with probability", preds.max())
