@@ -1,13 +1,14 @@
-# -*- coding: utf-8 -*-
 import os
+import argparse
 
 import matplotlib.pyplot as plt
 import numpy as np
-from keras.preprocessing import image
 from sklearn.metrics import confusion_matrix
 
 import efficientnet.keras as efn
 from utils import load_model, get_brands, get_activation_map, load_image
+
+WIDTH, HEIGHT = 512, 512
 
 def predict(img_dir, model, target_size=(224,224)):
     img_files = []
@@ -68,19 +69,21 @@ def calc_acc(y_pred, y_true):
             num_corrects += 1
     return num_corrects / num_samples
 
-if __name__ == '__main__':
-    val_dir = "./data/valid"
-    num_samples = sum([len(files) for _, _, files in os.walk(val_dir)])
-    img_width, img_height = 512, 512
+def make_arg_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', '--test_path', help='Test dir path', default="data/test", dest='test_path')
+    parser.add_argument('-m', '--model_path', help='Model path', default='ef/efficientnetb0_512.hdf5', dest='model_path')
+    return parser
 
+if __name__ == '__main__':
+    args = make_arg_parser().parse_args()
     brands = get_brands()
 
-    print("\nLoading the fine-tuned ResNet model....")
-    weights_path='efficientnetb1_512.hdf5'
-    model = load_model(weights_path)
+    num_samples = sum([len(files) for _, _, files in os.walk(args.test_path)])
+    print("\nLoading the fine-tuned model....")
+    model = load_model(args.model_path)
 
-    y_pred, y_true = predict(val_dir, model, (img_width, img_height))
-    #get_activation_map(model, "./data/valid/mitsubishi/737_1694660536.jpg", (img_width, img_height))
+    y_pred, y_true = predict(args.test_path, model, (WIDTH, HEIGHT))
 
     acc = calc_acc(y_pred, y_true)
     print("%s: %.2f%%" % ('acc', acc * 100))
