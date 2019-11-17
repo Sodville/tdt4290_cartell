@@ -54,8 +54,16 @@ $ tensorboard --logdir path_to_current_dir/logs
 You should now be able to see the training accuracies and losses in `localhost:6006` in your web browser.
 
 ### Analysis
-Update `weigths_path` in `utils.py` with your model, and use specify the path to your validation images. You can then run
+To calculate the accuracy on a given test set and compute the corresponding confusion matrix you can run the following script
 ```bash
-$ python analyze.py
+$ python3 analyze.py [-h] [-t TEST_PATH] [-m MODEL_PATH]
 ```
-This will result in calculating the accuracy for the provided test or validation set, and optionally the confusion matrix for it.
+For more help use the `-h` flag.
+
+### Demo
+To run a demo of the model, where prediction is performed on an input image and a heatmap is optionally output, you can run the following:
+
+```bash
+$ python3 demo.py [-h] -i IMAGE_PATH [-m MODEL_PATH] [-hm]
+```
+If `-hm` is passed as an argument, the heatmap for the prediction will be created and saved in `heatmap.jpg`. For more help use the `-h` flag.

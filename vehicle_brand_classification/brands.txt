@@ -1,31 +1,13 @@
-aston martin
 audi
 bmw
-bentley
-bugatti
-cadillac
-chevrolet
-fiat
-ferrari
 ford
-hummer
-honda
-hyundai
-isuzu
 jaguar
-jeep
-lamborghini
-land rover
-mini
-maybach
-mazda
-mclaren
 mercedes
 mitsubishi
 nissan
+peugeot
 porsche
-rolls-royce
-suzuki
+skoda
 tesla
 toyota
 volkswagen

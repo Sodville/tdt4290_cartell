@@ -8,9 +8,7 @@ import cv2 as cv
 import shutil
 import random
 from console_progressbar import ProgressBar
-
-with open("brands.txt", "r") as f:
-    brands = [line.strip().lower() for line in f.readlines()]
+from utils import get_brands
 
 def ensure_folder(folder):
     if not os.path.exists(folder):
@@ -60,9 +58,7 @@ def save_train_data(fnames, labels, bboxes):
             os.makedirs(dst_path)
         dst_path = os.path.join(dst_path, fname)
 
-        crop_image = src_image[y1:y2, x1:x2]
-        dst_img = cv.resize(src=crop_image, dsize=(img_height, img_width))
-        cv.imwrite(dst_path, dst_img)
+        cv.imwrite(dst_path, src_image)
 
 
 def save_test_data(fnames, bboxes):
@@ -88,9 +84,7 @@ def save_test_data(fnames, bboxes):
         pb.print_progress_bar((i + 1) * 100 / num_samples)
 
         dst_path = os.path.join(dst_folder, fname)
-        crop_image = src_image[y1:y2, x1:x2]
-        dst_img = cv.resize(src=crop_image, dsize=(img_height, img_width))
-        cv.imwrite(dst_path, dst_img)
+        cv.imwrite(dst_path, src_image)
 
 
 def process_train_data(class_names):
@@ -148,6 +142,7 @@ def process_test_data(class_names):
 if __name__ == '__main__':
     # parameters
     img_width, img_height = 224, 224
+    brands = get_brands()
 
     print('Extracting cars_train.tgz...')
     if not os.path.exists('cars_train'):
