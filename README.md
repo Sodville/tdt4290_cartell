@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://i.imgur.com/lQo3sOI.png">
+</p>
+
 # TDT4290-cartell
 
 This repository contains all code for the TDT4290 project.
@@ -13,7 +17,6 @@ For more information on running the different codes, look at the README's inside
 | Vehicle color classification | Code to train and predict vehicle colors from images.                                                        | [README.md](vehicle_color_classification/README.md)  |
 | API                          | The API for receiving images and classifying them. Also contains the Dockerfile used when deploying the API. | [README.md](api/README.md)  |
 | Labeling script              | The program to label images with the corresponding brand and color from license plates in images.            | [README.md](car_information/README.md)  |
-| Azure custom vision          | The program used to upload a dataset to the Microsoft  Azure Custom Vision platform.                         | [README.md](azure_custom_vision/README.md)  |
 
 ## Setting up a virtual environment
 
