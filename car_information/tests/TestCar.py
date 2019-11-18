@@ -1,4 +1,4 @@
-from Model.Car import Car
+from car_information.Model.Car import Car
 import os.path
 import json
 import unittest
@@ -13,8 +13,15 @@ class TestCar(unittest.TestCase):
         self.assertNotEqual(a, b)
 
     def test_load_from_json(self):
-        path = "tests/car_data"
-        data = self.read_from_json(path, "XX12345")
+        path = "car_information/tests/car_data"
+        # path = "car_data"
+        data = None
+        try:
+            data = self.read_from_json(path, "XX12345")
+        except FileNotFoundError:  # In case the test is ran from another directory
+            print("Didn't find file, trying backup location")
+            path = "car_data"
+            data = self.read_from_json(path, "XX12345")
         a = Car()
         a.load_data_from_json(json.dumps(data))
         b = Car()
