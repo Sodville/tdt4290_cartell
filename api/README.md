@@ -1,3 +1,10 @@
+# API
+
+The API is based on Flask, and can be used both locally and in a docker-environment.
+
+The Dockerfile creates a docker image which contains an API and the model for use in prediction.
+ 
+
 ## Running locally
 
 * Install dependencies
@@ -24,14 +31,26 @@
 
 ## Running on Docker
 
+The program Docker is needed for building and running the docker image.
+Docker can be installed via the guide on [https://docs.docker.com/install](https://docs.docker.com/install/). 
+
+To build the image, the only thing required will be the weights, which can either be downloaded via [google drive](https://drive.google.com/file/d/1CXWGf2hj_sJXIsSE4wfqUOqIv-EsYf7x/view?usp=sharing) or created as described in the vehicle brand classification [readme.md](../vehicle_brand_classification/README.md).
+
+
 ### Build image
+To build the image run:
 ```
- docker build -t apitest .
+ docker build -t vehicle_brand_classification .
 ```
 
 ### Run image
+After the image is created, it can be used by running:
 ```
- docker run -p 5000:5000 apitest:latest
+ docker run -p 5000:5000 vehicle_brand_classification:latest
 ```
 
-Add `-d` to detach it from the terminal
+Add `-d` to detach it from the terminal and make in run in the background.
+
+
+## API documentation
+

@@ -1,5 +1,19 @@
 # Vehicle Brand Recognition
 
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+<!-- code_chunk_output -->
+
+- [Vehicle Brand Recognition](#vehicle-brand-recognition)
+  - [Dependencies](#dependencies)
+  - [Usage](#usage)
+    - [Fine-tuning](#fine-tuning)
+    - [Analysis](#analysis)
+    - [Demo](#demo)
+
+<!-- /code_chunk_output -->
+
+
 This repository contains the source and functionality for predicting the brand of cars. The list of brands that are supported are found in `brands.txt` – this list is based on statistics about the most popular car brands in Norway.
 
 ## Dependencies
