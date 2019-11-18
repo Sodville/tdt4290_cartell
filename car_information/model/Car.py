@@ -22,3 +22,19 @@ class Car:
         self.merke = car_data["merke"]
         self.modell = car_data["modell"]
         self.farge = car_data["farge"]
+        return self
+
+    def load_data_from_vegvesenet(self, data):
+        self.registreringsnummer = data["kjennemerke"]
+        self.merke = data["tekniskKjoretoy"]["merke"]
+        self.modell = data["tekniskKjoretoy"]["handelsbetegnelse"]
+        self.farge = data["tekniskKjoretoy"]["karosseri"]["farge"]
+        return self
+
+    def get_data(self):
+        return {
+            "registreringsnummer": self.registreringsnummer,
+            "merke": self.merke,
+            "modell": self.modell,
+            "farge": self.farge
+        }
