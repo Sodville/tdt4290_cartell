@@ -1,7 +1,8 @@
 numpy
-keras
+keras==2.2.4
 pillow
+efficientnet
 sklearn
-tensorflow
+tensorflow==1.13.1
 console-progressbar
 opencv-python
