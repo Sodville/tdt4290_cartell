@@ -6,13 +6,19 @@ WIDTH, HEIGHT = 512, 512
 brands = get_brands()
 
 def make_arg_parser():
+    """
+    Creates an argument parser for the demo script
+    Args:
+
+    Returns: the argument parser for the demo script
+    """
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--image_path', help='Image path', dest='image_path', required=True)
-    parser.add_argument('-m', '--model_path', help='Model path', default='efficientnetb0_512.hdf5', dest='model_path')
-    parser.add_argument('-hm', '--heatmap', action='store_true', help='Display heatmap', default=False, dest='heatmap')
+    parser.add_argument("-i", "--image_path", help="Image path", dest="image_path", required=True)
+    parser.add_argument("-m", "--model_path", help="Model path", default="efficientnetb0_512.hdf5", dest="model_path")
+    parser.add_argument("-hm", "--heatmap", action="store_true", help="Display heatmap", default=False, dest="heatmap")
     return parser
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = make_arg_parser().parse_args()
     model = load_model(args.model_path)
 
