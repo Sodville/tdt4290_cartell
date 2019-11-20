@@ -20,9 +20,9 @@ def test_liveness_return_ok():
 
 def test_fileupload_wrong_post_argument_return_error():
     client = get_client()
-    response = client.post('/file-upload', buffered=True,
+    response = client.post('/api', buffered=True,
                                content_type='multipart/form-data',
-                               data={'NOT_FILE': (BytesIO(b'FAKE IMAGE DATA'), 'bad_img.jpg')})
+                               data={'NOT_FILE': (BytesIO(b'FAKE IMAGE DATA'), 'doesnt_matter.jpg')})
     assert response.status_code == 400
     assert response.content_type == "application/json"
     assert response.json["message"] == "No file part in the request"
@@ -30,10 +30,10 @@ def test_fileupload_wrong_post_argument_return_error():
 
 def test_fileupload_full_test_run_model_return_correct_brand():
     client = get_client()
-    api_upload.model = load_model("./efficientnetb0_512.hdf5")
-    api_upload.brands = get_brands("./brands.txt")
+    api_upload.model = load_model("./vehicle_brand_classification/efficientnetb0_512.hdf5")
+    api_upload.brands = get_brands("./vehicle_brand_classification/brands.txt")
     image = open('./tests/test_img.jpg', 'rb')
-    response = client.post('/file-upload', buffered=True,
+    response = client.post('/api', buffered=True,
                                content_type='multipart/form-data',
                                data={'file': (image, "image.jpg")})
     image.close()

@@ -18,7 +18,7 @@ def allowed_file(file):
         return ext and ext[1:] in ALLOWED_EXTENSIONS
 
 
-@api_setup.route('/file-upload', methods=['POST'])
+@api_setup.route('/api', methods=['POST'])
 def upload_file():
     # check if the post request has the file part
     if 'file' not in request.files:

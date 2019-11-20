@@ -17,7 +17,7 @@ The Dockerfile creates a docker image which contains an API and the model for us
 * You should now be able to spin up the API:
 
   ```py
-  python3 api_upload.py -w PATH_TO_WEIGHTS
+  python3 api_upload.py -w PATH_TO_WEIGHTS -b PATH_TO_LABELS
   ```
 
    `-w` is optional, and will by default refer respectively to `./efficientnetb0_512.hdf5`, so saving the weights in the same folder as `api_upload.py` without renaming the file will save you from specifying the path.
