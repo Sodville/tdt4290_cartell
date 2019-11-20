@@ -27,7 +27,7 @@ The Dockerfile creates a Docker image which contains an API and the model for us
    
  You should now be able to send POST requests of your images as jpg or png file formats. The request must be sent to port 5000.
 
- A succesful response with code 201 could look like the following for brand prediction
+ A succesful response with code 200 could look like the following for brand prediction
  ```json
  {'audi': 1.5660635e-10, 'bmw': 5.7521644e-12, 'ford': 7.1362174e-12, 'jaguar': 7.3524025e-12, 'mercedes': 4.0594708e-11, 'mitsubishi': 3.221091e-14, 'nissan': 1.0, 'peugeot': 1.3644183e-11, 'porsche': 3.095818e-12, 'skoda': 1.0349395e-09, 'tesla': 2.1225747e-12, 'toyota': 1.0142925e-10, 'volkswagen': 4.066172e-12, 'volvo': 7.5269685e-10}
  ```
@@ -37,7 +37,7 @@ The Dockerfile creates a Docker image which contains an API and the model for us
 The program Docker is needed for building and running the docker image.
 Docker can be installed via the guide on [https://docs.docker.com/install](https://docs.docker.com/install/). 
 
-To build the image, the only thing required will be the weights, which can either be downloaded from [here](https://drive.google.com/file/d/1CXWGf2hj_sJXIsSE4wfqUOqIv-EsYf7x/view?usp=sharing) for brand prediction, or [here](https://drive.google.com/file/d/1lRUEykbsTh3VXAQqPaILYLzWt2cDDsBP/view?usp=sharing) for color prediction, or created as described in the vehicle brand classification [README.md](../vehicle_brand_classification/README.md).
+To build the image, the only thing required will be the weights, which can either be downloaded from [here](https://drive.google.com/file/d/1CXWGf2hj_sJXIsSE4wfqUOqIv-EsYf7x/view?usp=sharing) for brand prediction, or [here](https://drive.google.com/file/d/1lRUEykbsTh3VXAQqPaILYLzWt2cDDsBP/view?usp=sharing) for color prediction, or created as described in the corresponding vehicle classification [README.md](../README.md).
 
 
 ### Build image
@@ -46,18 +46,18 @@ The image can be build with either the brand classification weights, or the colo
 
 To build the brand classification image run:
 ```
-docker build -t vehicle_brand_classification --build-arg weights=./vehicle_brand_classification/efficientnetb0_512.hdf5 --build-arg labels=./vehicle_brand_classification/brands.txt .
+docker build -t api_brand --build-arg weights=./vehicle_brand_classification/efficientnetb0_512.hdf5 --build-arg labels=./vehicle_brand_classification/brands.txt .
 ```
 
 The color classification image can be made with:
 ```
- docker build -t vehicle_color_classification --build-arg weights=./vehicle_color_classification/color_weights.hdf5 --build.arg labels=./vehicle_color_classification/color.txt .
+ docker build -t api_color --build-arg weights=./vehicle_color_classification/color_weights.hdf5 --build-arg labels=./vehicle_color_classification/colors.txt .
 ```
 
 ### Run image
 After the image is created, it can be used by running:
 ```
-docker run -p 5000:5000 vehicle_brand_classification:latest
+docker run -p 5000:5000 api_brand:latest
 ```
 
 Add `-d` to detach it from the terminal and make in run in the background.

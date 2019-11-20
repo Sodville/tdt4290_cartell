@@ -77,6 +77,7 @@ if __name__ == "__main__":
 
     if args.dev:
         # This runs the server in a less secure way
+        # Enable https by adding ssl_context='adhoc' to run
         api_setup.run(host="0.0.0.0")
     else:
         # Run the server with the flask standard

@@ -17,4 +17,4 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "./api_upload.py,", "-w weights.hdf5", "-l labels.txt"]
+CMD ["python", "./api_upload.py", "-w", "weights.hdf5", "-l", "labels.txt"]
