@@ -1,11 +1,9 @@
 import os
-import urllib.request
 import argparse
 import fleep
 
 from api_setup import api_setup
-from flask import Flask, request, redirect, jsonify
-from werkzeug.utils import secure_filename
+from flask import request, jsonify
 from model_utils import predict, load_model, load_image, get_brands
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -13,7 +11,11 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 def allowed_file(file):
     info = fleep.get(file.read(128))
-    return info.extension[0] in ALLOWED_EXTENSIONS
+    if len(info.extension) != 0:
+        return info.extension[0] in ALLOWED_EXTENSIONS  # magic number check
+    else:  # Backup solution in case the magic number got stripped
+        name, ext = os.path.splitext(file.filename)
+        return ext and ext[1:] in ALLOWED_EXTENSIONS
 
 
 @api_setup.route('/file-upload', methods=['POST'])
@@ -35,7 +37,8 @@ def upload_file():
 
         # Here the image is fetched from the api, and correctly encoded for the model
         pred = predict(model, image, brands)  # Predict on the model
-        resp = jsonify(str(pred))  # Build response as json
+        pred = {x: float(pred[x]) for x in pred}  # Translate np float -> python float to allow it to be made to json
+        resp = jsonify(pred)  # Build response as json
         resp.status_code = 201
         return resp
     else:
@@ -47,7 +50,7 @@ def upload_file():
 
 # A liveness test to check the status of the container
 @api_setup.route("/liveness", methods=['GET'])
-def home():
+def liveness():
     return "OK"
 
 
@@ -59,10 +62,12 @@ def make_argparser():
             type=str, help="Path to brand labels for model")
     return parser
 
+
 if __name__ == "__main__":
     args = make_argparser().parse_args()
 
     # Initialize the model
+    print("Loading brands and model")
     brands = get_brands(args.brands_path)
     model = load_model(args.weights_path)
     print("Model was loaded succesfully.")

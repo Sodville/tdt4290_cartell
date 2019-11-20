@@ -52,5 +52,15 @@ After the image is created, it can be used by running:
 Add `-d` to detach it from the terminal and make in run in the background.
 
 
+### Run tests
+To run the tests, the requirements are located in tests/requirements.txt
+```
+pip3 install -r tests/requirements.txt
+```
+To run the tests for the API, run this command inside the api folder:
+```
+python3 -m pytest tests
+```
+
 ## API documentation
 
