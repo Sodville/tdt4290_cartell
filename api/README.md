@@ -28,8 +28,13 @@ The Dockerfile creates a Docker image which contains an API and the model for us
  You should now be able to send POST requests of your images as jpg or png file formats. The request must be sent to port 5000.
 
  A succesful response with code 200 could look like the following for brand prediction
- ```json
+ ```
  {'audi': 1.5660635e-10, 'bmw': 5.7521644e-12, 'ford': 7.1362174e-12, 'jaguar': 7.3524025e-12, 'mercedes': 4.0594708e-11, 'mitsubishi': 3.221091e-14, 'nissan': 1.0, 'peugeot': 1.3644183e-11, 'porsche': 3.095818e-12, 'skoda': 1.0349395e-09, 'tesla': 2.1225747e-12, 'toyota': 1.0142925e-10, 'volkswagen': 4.066172e-12, 'volvo': 7.5269685e-10}
+ ```
+
+and for color prediction:
+ ```
+{ “black”: 5.854989102851937e-18, “blue”: 1.0627216710530196e-14, “cyan”: 8.173336139838394e-12, “gray”: 2.8952212263906596e-13, “green”: 2.851018052751897e-07, “red”: 4.1193661844260085e-14, “white”: 1.254491264388285e-15, “yellow”: 0.9999997615814209 }
  ```
 
 ## Running on Docker
@@ -55,9 +60,13 @@ The color classification image can be made with:
 ```
 
 ### Run image
-After the image is created, it can be used by running:
+After the image is created, it can be used by running command:
 ```
 docker run -p 5000:5000 api_brand:latest
+```
+or for color prediction:
+```
+docker run -p 5000:5000 api_color:latest
 ```
 
 Add `-d` to detach it from the terminal and make in run in the background.
