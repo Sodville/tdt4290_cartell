@@ -6,6 +6,14 @@ from keras import optimizers
 # Implementation of model from https://arxiv.org/pdf/1510.07391.pdf
 
 def make_model(input_shape, num_classes):
+    """
+    Creates a color prediction model with specified input shape and specified number of output classes
+    Args:
+        input_shape: The shape of the model input
+        num_classes: Number of output classes for the model.
+
+    Returns: The model with specified arguments
+    """
     input_image = Input(shape=input_shape)
     # ============================================= TOP BRANCH ===================================================
     # first top convolution layer

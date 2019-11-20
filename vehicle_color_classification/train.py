@@ -5,6 +5,14 @@ from keras.callbacks import ModelCheckpoint, TensorBoard
 
 from time import time
 
+"""
+This script runs NUM_EPOCHS of training on WIDTHxHEIGHT sized images 
+for the model specified in model.py
+The best weights from the validation testing will be saved to CKPT_PATH.
+BATCH_SIZE should be adjusted according to the amount of memory available,
+and NUM_EPOCHS should be changed accordingly to when one sees the model is overfitting.
+"""
+
 CKPT_PATH = 'color_weights.hdf5'
 WIDTH, HEIGHT = 227, 227
 NUM_CLASSES = 8
