@@ -12,8 +12,8 @@ def make_arg_parser():
     Returns: the argument parser for the script
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--image_path', help='Image path', dest='image_path', required=True)
-    parser.add_argument('-m', '--model_path', help='Model path', default='color_model.h5', dest='model_path')
+    parser.add_argument("-i", "--image_path", help="Image path", dest="image_path", required=True)
+    parser.add_argument("-m", "--model_path", help="Model path", default="color_model.h5", dest="model_path")
     return parser
 
 def load_image(img_path, out_size=(227,227)):
@@ -37,7 +37,7 @@ def get_class_string(one_hot_vector):
         one_hot_vector: the one hot vector to decode
     Returns: The class string for the input vector
     """
-    labels = ['black', 'blue', 'cyan', 'gray', 'green', 'red', 'white', 'yellow']
+    labels = ["black", "blue", "cyan", "gray", "green", "red", "white", "yellow"]
     labels = sorted(labels)
     idx = np.argmax(one_hot_vector)
     return labels[idx]
