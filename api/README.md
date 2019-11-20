@@ -85,3 +85,84 @@ python3 -m pytest tests
 
 ## API documentation
 
+**URL-Endpoint: `GET /liveness`**
+
+This endpoint checks if the system is responsive and is up and running.
+
+
+**Success response:**
+```
+Code: 200
+Content: OK
+```
+
+
+**URL-Endpoint: `POST /api`**
+
+This endpoint is used for car classification. Both the 
+car color and car make classification uses the same api endpoint.
+The responses will be similar, only the labels will be different.
+
+
+Request-body:
+```
+POST /api HTTP/1.1
+Accepts: application/json
+Content-Type: multipart/form-data
+
+Content-Disposition: form-data; name="file"; filename=<IMAGE_PATH>
+```
+
+Curl example:
+```
+curl -X POST \
+  http://0.0.0.0:5000/api \
+  -H 'content-type: multipart/form-data' \
+  -F file=@test_img.jpg
+```
+
+**Sucess response (car make classfication):**
+```
+Code: 200
+Content-Type: application/json
+Content: {
+  "audi": 1.8454512362708897e-9,
+  "bmw": 1.8632862008871598e-7,
+  "ford": 4.905129080690074e-10,
+  "jaguar": 4.323361224578548e-8,
+  "mercedes": 1.5409258591336794e-10,
+  "mitsubishi": 3.721137981083089e-12,
+  "nissan": 6.927771689646534e-10,
+  "peugeot": 1.4581404139679677e-10,
+  "porsche": 5.530252904922817e-12,
+  "skoda": 0.00008143833838403225,
+  "tesla": 1.6919127774142617e-12,
+  "toyota": 0.9997408986091614,
+  "volkswagen": 0.0001774589909473434,
+  "volvo": 5.509662170943841e-11
+}
+```
+
+**Success response (car color classification):**
+```
+Code: 200
+Content-Type: application/json
+Content: {
+{
+    “black”: 5.854989102851937e-18,
+    “blue”: 1.0627216710530196e-14,
+    “cyan”: 8.173336139838394e-12,
+    “gray”: 2.8952212263906596e-13,
+    “green”: 2.851018052751897e-07,
+    “red”: 4.1193661844260085e-14,
+    “white”: 1.254491264388285e-15,
+    “yellow”: 0.9999997615814209
+}
+```
+
+Error responses:
+```
+Code: 400
+Content-Type: application/json
+Content: "Bad request"
+```
