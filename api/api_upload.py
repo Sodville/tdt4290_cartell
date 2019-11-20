@@ -39,7 +39,7 @@ def upload_file():
         pred = predict(model, image, labels)  # Predict on the model
         pred = {x: float(pred[x]) for x in pred}  # Translate np float -> python float to allow it to be made to json
         resp = jsonify(pred)  # Build response as json
-        resp.status_code = 201
+        resp.status_code = 200
         return resp
     else:
         resp = jsonify(
@@ -56,10 +56,12 @@ def liveness():
 
 def make_argparser():
     parser = argparse.ArgumentParser(description="Predict a desired car feature")
-    parser.add_argument("-w", "--weights_path", default="./efficientnetb0_512.hdf5",
+    parser.add_argument("-w", "--weights_path", default="./vehicle_brand_classification/efficientnetb0_512.hdf5",
             type=str, help="Path to weights for model")
-    parser.add_argument("-l", "--label_path", default="./brands.txt",
+    parser.add_argument("-l", "--label_path", default="./vehicle_brand_classification/brands.txt",
             type=str, help="Path to labels for model")
+    parser.add_argument("--dev", default=False,
+            type=bool, help="Run the server in dev-mode. NOT RECOMMENDED FOR PRODUCTION")
     return parser
 
 
@@ -73,4 +75,10 @@ if __name__ == "__main__":
     target_shape = model.layers[0].input_shape[1:-1]
     print("Model was loaded succesfully.")
 
-    api_setup.run(host="0.0.0.0")  # ssl_context="adhoc" for unsigned ssl
+    if args.dev:
+        # This runs the server in a less secure way
+        api_setup.run(host="0.0.0.0")
+    else:
+        # Run the server with the flask standard
+        from waitress import serve
+        serve(api_setup, host="0.0.0.0", port=5000)

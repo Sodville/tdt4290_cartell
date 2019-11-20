@@ -41,22 +41,31 @@ To build the image, the only thing required will be the weights, which can eithe
 
 
 ### Build image
-To build the image run:
+
+The image can be build with either the brand classification weights, or the color classification weights.
+
+To build the brand classification image run:
 ```
- docker build -t vehicle_brand_classification .
+docker build -t vehicle_brand_classification --build-arg weights=./vehicle_brand_classification/efficientnetb0_512.hdf5 --build-arg labels=./vehicle_brand_classification/brands.txt .
+```
+
+The color classification image can be made with:
+```
+ docker build -t vehicle_color_classification --build-arg weights=./vehicle_color_classification/color_weights.hdf5 --build.arg labels=./vehicle_color_classification/color.txt .
 ```
 
 ### Run image
 After the image is created, it can be used by running:
 ```
- docker run -p 5000:5000 vehicle_brand_classification:latest
+docker run -p 5000:5000 vehicle_brand_classification:latest
 ```
 
 Add `-d` to detach it from the terminal and make in run in the background.
 
 
 ### Run tests
-To run the tests, the requirements are located in tests/requirements.txt
+To run the tests, the requirements are located in tests/requirements.txt. 
+The tests also require the weights and labels for the models.
 ```
 pip3 install -r tests/requirements.txt
 ```

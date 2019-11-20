@@ -5,3 +5,4 @@ efficientnet==1.0.0
 Pillow
 Flask==1.1.1
 fleep==1.0.1
+waitress==1.3.1
