@@ -3,6 +3,6 @@ keras==2.2.4
 pillow
 efficientnet
 sklearn
-tensorflow==1.13.1
+tensorflow==2.6.4
 console-progressbar
 opencv-python
