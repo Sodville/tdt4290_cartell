@@ -1,6 +1,6 @@
 FLASK==1.1.1
 keras==2.2.5
-tensorflow==1.14.0
+tensorflow==2.7.2
 efficientnet==1.0.0
 Pillow
 Flask==1.1.1
